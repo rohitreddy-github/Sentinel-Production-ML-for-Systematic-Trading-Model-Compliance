@@ -261,13 +261,4 @@ pytest tests/ -v
 
 ---
 
-## Author
 
-**Karthik** — Engineering student at SRM University-AP, building production-grade AI systems for quantitative finance.
-
-This project demonstrates:
-- Awareness of real ML failure modes in finance (leakage, non-stationarity, look-ahead bias)
-- Production engineering mindset (not just notebooks)
-- Regulatory awareness (audit trails, explainability, model governance)
-- Risk management discipline (VaR, CVaR, drawdown monitoring)
-- Clean software architecture (typed Python, Docker, API design, tests)
