@@ -1,0 +1,70 @@
+# Risk-Aware Portfolio Optimization — Docker Compose
+# Services: training pipeline, prediction API, monitoring dashboard
+
+version: "3.8"
+
+services:
+  # ── Training Pipeline (batch job) ──────────────────────────────────────
+  trainer:
+    build:
+      context: .
+      dockerfile: Dockerfile.trainer
+    volumes:
+      - model-data:/app/model_registry
+      - log-data:/app/logs
+      - market-data:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
+    profiles:
+      - train  # Only runs when: docker compose --profile train up trainer
+
+  # ── Prediction API ─────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - model-data:/app/model_registry
+      - log-data:/app/logs
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - API_WORKERS=2
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+  # ── Streamlit Dashboard ────────────────────────────────────────────────
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: streamlit run streamlit_app/app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - model-data:/app/model_registry
+      - log-data:/app/logs
+      - ./streamlit_app:/app/streamlit_app
+      - ./figures:/app/figures
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  model-data:
+    driver: local
+  log-data:
+    driver: local
+  market-data:
+    driver: local

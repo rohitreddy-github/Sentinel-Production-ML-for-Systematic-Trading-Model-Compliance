@@ -1,0 +1,38 @@
+# Python virtual environments
+venv/
+env/
+*.egg-info/
+__pycache__/
+*.py[cod]
+
+# Virtual envs with custom names
+Risk_Aware_venv/
+
+
+# IDE/editor settings
+.vscode/
+.idea/
+
+# System junk
+.DS_Store
+Thumbs.db
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Data & models (if temporary)
+*.csv
+*.xlsx
+*.h5
+*.pkl
+*.npz
+*.json
+data/
+datasets/
+models/
+figures/
+
+# Secret config
+.env
+*.env
+idea.txt

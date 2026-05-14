@@ -1,0 +1,13 @@
+yfinance
+pandas
+numpy
+matplotlib
+seaborn
+alpha_vantage
+pandas_datareader
+transformers==4.40.0
+sentencepiece
+torch
+ta
+shap
+streamlit
